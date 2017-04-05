@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.ProjectOxford.Vision;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Plugin.Permissions;
@@ -20,19 +22,20 @@ namespace SeeingAI
 
         #region Properties
 
-        private ImageSource _photo = null;
+        private MediaFile _photo;
+        private ImageSource _photoSource;
         private string _description = string.Empty;
 
-        public ImageSource Photo
+        public ImageSource PhotoSource
         {
             get
             {
-                return _photo;
+                return _photoSource;
             }
 
             set
             {
-                _photo = value;
+                _photoSource = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsAnalyzeEnabled));
             }
@@ -53,7 +56,8 @@ namespace SeeingAI
             }
         }
 
-        public bool IsAnalyzeEnabled => _photo != null;
+        public bool IsAnalyzeEnabled => PhotoSource != null;
+
         public bool IsReadEnabled => !string.IsNullOrEmpty(Description);
 
         #endregion
@@ -69,8 +73,9 @@ namespace SeeingAI
                 if (!canAccessCamera)
                     return;
 
-                var photo = await TakePhotoAsync();
-                Photo = ImageSource.FromFile(photo.Path);
+                _photo = await TakePhotoAsync();
+
+                PhotoSource = ImageSource.FromFile(_photo.Path);
                 Description = string.Empty;
             });
 
@@ -78,17 +83,27 @@ namespace SeeingAI
 
         private void DoOnAnalyzeClicked(object sender, EventArgs eventArgs)
         {
-            RunBusyAction(() =>
+            RunBusyAction(async () =>
             {
-                Description = "This is just an example";
+                var visionClient = new VisionServiceClient("8ecd694afa784378b4b9ad5bd1927cea");
+                var features = new[] { VisualFeature.Description };
+                var photoStream = _photo.GetStream();
+
+                var analysisResult = await visionClient.AnalyzeImageAsync(photoStream, features.ToList());
+
+                Description = analysisResult.Description.Captions.OrderByDescending(c => c.Confidence).First().Text;
             });
         }
 
         private void DoOnReadClicked(object sender, EventArgs eventArgs)
         {
-            RunBusyAction(() =>
+            RunBusyAction(async () =>
             {
-                CrossTextToSpeech.Current.Speak(Description);
+                var textToSpeech = CrossTextToSpeech.Current;
+                var crossLocale = textToSpeech.GetInstalledLanguages().First(cl => cl.Language == "en");
+                var text = "I think it is " + Description + ".";
+
+                await Task.Run(() => textToSpeech.Speak(text, crossLocale: crossLocale));
             });
         }
 
@@ -96,7 +111,7 @@ namespace SeeingAI
 
         #region Private Helpers
 
-        private void RunBusyAction(Action action)
+        private async void RunBusyAction(Func<Task> action)
         {
             if (IsBusy)
                 return;
@@ -105,7 +120,7 @@ namespace SeeingAI
 
             try
             {
-                action();
+                await action();
             }
             finally
             {
@@ -131,7 +146,7 @@ namespace SeeingAI
             return permissionStatus == PermissionStatus.Granted;
         }
 
-        private async Task<MediaFile> TakePhotoAsync()
+        private static async Task<MediaFile> TakePhotoAsync()
         {
             await CrossMedia.Current.Initialize();
 

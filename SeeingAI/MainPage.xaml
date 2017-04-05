@@ -24,7 +24,7 @@
                            Grid.Column="0"
                            Grid.ColumnSpan="3"/>
 
-        <Image Source="{Binding Photo, Mode=OneWay}"
+        <Image Source="{Binding PhotoSource, Mode=OneWay}"
                HorizontalOptions="CenterAndExpand"
                VerticalOptions="CenterAndExpand"
                Grid.Row="1"
