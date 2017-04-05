@@ -75,10 +75,9 @@ namespace SeeingAI
 
                 _photo = await TakePhotoAsync();
 
-                PhotoSource = ImageSource.FromFile(_photo.Path);
+                PhotoSource = ImageSource.FromStream(() => _photo.GetStream());
                 Description = string.Empty;
             });
-
         }
 
         private void DoOnAnalyzeClicked(object sender, EventArgs eventArgs)
@@ -154,7 +153,7 @@ namespace SeeingAI
             {
                 Directory = "tmp",
                 Name = Guid.NewGuid().ToString(),
-                CompressionQuality = 70
+                CustomPhotoSize = 50
             };
 
             return await CrossMedia.Current.TakePhotoAsync(newPhotoOptions);
