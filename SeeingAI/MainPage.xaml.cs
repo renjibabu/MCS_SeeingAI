@@ -100,7 +100,7 @@ namespace SeeingAI
             RunBusyAction(async () =>
             {
                 var textToSpeech = CrossTextToSpeech.Current;
-                var crossLocale = textToSpeech.GetInstalledLanguages().First(cl => cl.Language == "en");
+                var crossLocale = textToSpeech.GetInstalledLanguages().First(cl => cl.Language == "en" || cl.Language == "en-US");
                 var text = "I think it is " + Description + ".";
 
                 await Task.Run(() => textToSpeech.Speak(text, crossLocale: crossLocale));
@@ -153,7 +153,8 @@ namespace SeeingAI
             var newPhotoOptions = new StoreCameraMediaOptions
             {
                 Directory = "tmp",
-                Name = Guid.NewGuid().ToString()
+                Name = Guid.NewGuid().ToString(),
+                CompressionQuality = 70
             };
 
             return await CrossMedia.Current.TakePhotoAsync(newPhotoOptions);

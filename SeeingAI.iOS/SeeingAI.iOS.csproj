@@ -47,7 +47,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: thomas.kaelin@bbv.ch (82N69NXX9L)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
@@ -171,7 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SeeingAI\SeeingAI.csproj">
-      <Project>{4d58192c-4d74-4572-8c7d-ae1e9145915e}</Project>
+      <Project>{A3F675F1-C671-4901-9409-AECB120F718E}</Project>
       <Name>SeeingAI</Name>
     </ProjectReference>
   </ItemGroup>
