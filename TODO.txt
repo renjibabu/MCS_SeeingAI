@@ -1,0 +1,2 @@
+- Bild erfassen: Abbruch >> Exception
+- Bild erkennen: mehrere Ergebnisse / Logging?
