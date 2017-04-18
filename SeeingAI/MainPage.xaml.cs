@@ -92,8 +92,10 @@ namespace SeeingAI
                 var photoStream = _photo.GetStream();
 
                 var analysisResult = await visionClient.AnalyzeImageAsync(photoStream, features.ToList());
+                var bestAnalysisresult = analysisResult.Description.Captions.OrderByDescending(c => c.Confidence).First();
+                var description = $"I think it is {bestAnalysisresult.Text}.";
 
-                Description = analysisResult.Description.Captions.OrderByDescending(c => c.Confidence).First().Text;
+                Description = description;
             });
         }
 
@@ -101,9 +103,9 @@ namespace SeeingAI
         {
             RunBusyAction(async () =>
             {
+                var text = Description;
                 var textToSpeech = CrossTextToSpeech.Current;
                 var crossLocale = textToSpeech.GetInstalledLanguages().First(cl => cl.Language == "en" || cl.Language == "en-US");
-                var text = "I think it is " + Description + ".";
 
                 await Task.Run(() => textToSpeech.Speak(text, crossLocale: crossLocale));
             });
@@ -138,7 +140,7 @@ namespace SeeingAI
             {
                 if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Camera))
                 {
-                    await DisplayAlert("Use camera", "Acces to camera needed", "OK");
+                    await DisplayAlert("Use camera", "Access to camera needed", "OK");
                 }
 
                 var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Camera);
