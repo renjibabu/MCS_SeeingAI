@@ -75,6 +75,9 @@ namespace SeeingAI
 
                 _photo = await TakePhotoAsync();
 
+                if (_photo == null)
+                    return;
+
                 PhotoSource = ImageSource.FromStream(() => _photo.GetStream());
                 Description = string.Empty;
             });
