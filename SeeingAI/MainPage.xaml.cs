@@ -87,13 +87,21 @@ namespace SeeingAI
         {
             RunBusyAction(async () =>
             {
+                var description = string.Empty;
                 var visionClient = new VisionServiceClient("8ecd694afa784378b4b9ad5bd1927cea");
                 var features = new[] { VisualFeature.Description };
                 var photoStream = _photo.GetStream();
 
-                var analysisResult = await visionClient.AnalyzeImageAsync(photoStream, features.ToList());
-                var bestAnalysisresult = analysisResult.Description.Captions.OrderByDescending(c => c.Confidence).First();
-                var description = $"I think it is {bestAnalysisresult.Text}.";
+                try
+                {
+                    var analysisResult = await visionClient.AnalyzeImageAsync(photoStream, features.ToList());
+                    var bestAnalysisresult = analysisResult.Description.Captions.OrderByDescending(c => c.Confidence).First();
+                    description = $"I think it is {bestAnalysisresult.Text}.";
+                }
+                catch (Exception exception)
+                {
+                    description = $"Error: {exception.Message}.";
+                }
 
                 Description = description;
             });
@@ -158,7 +166,8 @@ namespace SeeingAI
             {
                 Directory = "tmp",
                 Name = Guid.NewGuid().ToString(),
-                CustomPhotoSize = 50
+                CustomPhotoSize = 50,
+                CompressionQuality = 70
             };
 
             return await CrossMedia.Current.TakePhotoAsync(newPhotoOptions);
