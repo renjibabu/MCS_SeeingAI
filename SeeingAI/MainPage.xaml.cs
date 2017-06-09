@@ -26,6 +26,22 @@ namespace SeeingAI
         private ImageSource _photoSource;
         private string _description = string.Empty;
 
+        public new bool IsBusy
+        {
+            get
+            {
+                return base.IsBusy;
+            }
+
+            set
+            {
+                base.IsBusy = value;
+                OnPropertyChanged(nameof(IsCaptureEnabled));
+                OnPropertyChanged(nameof(IsAnalyzeEnabled));
+                OnPropertyChanged(nameof(IsReadEnabled));
+            }
+        }
+
         public ImageSource PhotoSource
         {
             get
@@ -56,9 +72,11 @@ namespace SeeingAI
             }
         }
 
-        public bool IsAnalyzeEnabled => PhotoSource != null;
+        public bool IsCaptureEnabled => !IsBusy;
 
-        public bool IsReadEnabled => !string.IsNullOrEmpty(Description);
+        public bool IsAnalyzeEnabled => !IsBusy && _photo != null && PhotoSource != null;
+
+        public bool IsReadEnabled => !IsBusy && !string.IsNullOrEmpty(Description);
 
         #endregion
 
@@ -68,18 +86,25 @@ namespace SeeingAI
         {
             RunBusyAction(async () =>
             {
-                var canAccessCamera = await CanAccessCameraAsync();
+                try
+                {
+                    var canAccessCamera = await CanAccessCameraAsync();
 
-                if (!canAccessCamera)
-                    return;
+                    if (!canAccessCamera)
+                        return;
 
-                _photo = await TakePhotoAsync();
+                    _photo = await TakePhotoAsync();
 
-                if (_photo == null)
-                    return;
+                    if (_photo == null)
+                        return;
 
-                PhotoSource = ImageSource.FromStream(() => _photo.GetStream());
-                Description = string.Empty;
+                    PhotoSource = ImageSource.FromStream(() => _photo.GetStream());
+                    Description = string.Empty;
+                }
+                catch (Exception exception)
+                {
+                    Description = $"Error: {exception.Message}.";
+                }
             });
         }
 
@@ -95,8 +120,8 @@ namespace SeeingAI
                 try
                 {
                     var analysisResult = await visionClient.AnalyzeImageAsync(photoStream, features.ToList());
-                    var bestAnalysisresult = analysisResult.Description.Captions.OrderByDescending(c => c.Confidence).First();
-                    description = $"I think it is {bestAnalysisresult.Text}.";
+                    var bestAnalysisResult = analysisResult.Description.Captions.OrderByDescending(c => c.Confidence).First();
+                    description = $"I think it is {bestAnalysisResult.Text}.";
                 }
                 catch (Exception exception)
                 {

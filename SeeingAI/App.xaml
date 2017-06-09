@@ -4,7 +4,18 @@
              x:Class="SeeingAI.App">
 	<Application.Resources>
 
-		<!-- Application resource dictionary -->
+	    <ResourceDictionary>
+	        <Style x:Key="RedButtonStyle" TargetType="Button">
+	            <Setter Property="HorizontalOptions" Value="Center" />
+	            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+                <Setter Property="BackgroundColor" Value="#CC071E" />
+	            <Setter Property="TextColor" Value="White" />
+                <Setter Property="BorderColor" Value="Black" />
+	            <Setter Property="BorderRadius" Value="5" />
+	            <Setter Property="BorderWidth" Value="1" />
+	            <Setter Property="WidthRequest" Value="200" />
+	        </Style>
+	    </ResourceDictionary>
 
-	</Application.Resources>
+    </Application.Resources>
 </Application>
