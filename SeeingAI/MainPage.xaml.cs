@@ -17,6 +17,9 @@ namespace SeeingAI
         public MainPage()
         {
             InitializeComponent();
+
+            PhotoSource = "bbv_logo.png";
+        
             BindingContext = this;
         }
 
