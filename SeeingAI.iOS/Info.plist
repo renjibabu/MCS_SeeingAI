@@ -21,7 +21,7 @@
 	<key>MinimumOSVersion</key>
 	<string>10.0</string>
 	<key>CFBundleDisplayName</key>
-	<string>SeeingAI</string>
+	<string>Seeing AI</string>
 	<key>CFBundleIdentifier</key>
 	<string>ch.bbv.mobile.SeeingAI</string>
 	<key>CFBundleVersion</key>
@@ -47,7 +47,7 @@
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
-	<string>SeeingAI</string>
+	<string>Seeing AI</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Needs access to the camera for taking photos.</string>
 </dict>

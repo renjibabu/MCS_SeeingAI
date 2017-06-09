@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SeeingAI.App">
@@ -10,9 +10,7 @@
 	            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
                 <Setter Property="BackgroundColor" Value="#CC071E" />
 	            <Setter Property="TextColor" Value="White" />
-                <Setter Property="BorderColor" Value="Black" />
 	            <Setter Property="BorderRadius" Value="5" />
-	            <Setter Property="BorderWidth" Value="1" />
 	            <Setter Property="WidthRequest" Value="200" />
 	        </Style>
 	    </ResourceDictionary>
