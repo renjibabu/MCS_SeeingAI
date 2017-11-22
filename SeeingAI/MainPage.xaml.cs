@@ -116,7 +116,7 @@ namespace SeeingAI
             RunBusyAction(async () =>
             {
                 var description = string.Empty;
-                var visionClient = new VisionServiceClient("8ecd694afa784378b4b9ad5bd1927cea");
+                var visionClient = new VisionServiceClient("eb0434445df2417785d802c2d3af1edc", "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0");
                 var features = new[] { VisualFeature.Description };
                 var photoStream = _photo.GetStream();
 
